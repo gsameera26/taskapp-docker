@@ -1,0 +1,61 @@
+pipeline {
+
+    agent any
+
+
+
+    stages {
+
+        stage('Clone Repository') {
+
+            steps {
+
+                git branch: 'main',
+
+                    url: 'https://github.com/gsameera26/taskapp-docker.git'
+
+            }
+
+        }
+
+
+
+        stage('Build Docker Image') {
+
+            steps {
+
+                script {
+
+                    sh 'docker build -t taskapp-docker:latest .'
+
+                }
+
+            }
+
+        }
+
+
+
+        stage('Run Docker Container') {
+
+            steps {
+
+                script {
+
+                    // Stop old container if running
+
+                    sh 'docker rm -f taskapp-docker || true'
+
+                    // Run new container
+
+                    sh 'docker run -d --name taskapp-docker -p 8080:80 simple-webapp:latest'
+
+                }
+
+            }
+
+        }
+
+    }
+
+}
